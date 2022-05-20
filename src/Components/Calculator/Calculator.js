@@ -5,7 +5,7 @@ class Calculator extends Component{
     constructor() {
         super();
         this.state = {
-            currentInput: []
+            currentInput: [0]
         };
         this.numberClick = this.numberClick.bind(this);
         this.operatorClick = this.operatorClick.bind(this);
@@ -13,34 +13,71 @@ class Calculator extends Component{
     }
 
     numberClick = (n) => {
-        this.setState({
-            currentInput: [...this.state.currentInput, n]
-        })
+        if (this.state.currentInput[0] === 0){
+            this.setState({
+                currentInput: [n]
+            })
+        }else{
+            this.setState({
+                currentInput: [...this.state.currentInput, n]
+            })
+        }
     }
 
     operatorClick = (o) => {
-        this.setState({
-            currentInput: [...this.state.currentInput, ' ', o, ' ']
-        })
+        if(this.state.currentInput[this.state.currentInput.length - 1] === " "){
+            console.log('true dat')
+            this.setState({
+                currentInput: [...this.state.currentInput].slice(0, this.state.currentInput.length - 2)
+            });
+
+            console.log(this.state.currentInput)
+
+            this.setState({
+                currentInput: [...this.state.currentInput, ' ', o, ' ']
+            })
+        }else{
+            this.setState({
+                currentInput: [...this.state.currentInput, ' ', o, ' ']
+            })
+        }
+        
     }
 
     calculateAnswer = () => {
         console.log("clicked on the = button")
         let total = 0;
-        // let arr = [...this.state.currentInput].join('').split(' ');
+        let arr = [...this.state.currentInput].join('').split(' ');
+        console.log(arr)
 
-        // for(let i = 1; i < arr.length; i + 2){
-        //     if (i === 1){
-        //         switch(arr[i]){
-        //             case '+':
-        //                 total = arr[i - 1] + arr[i + 1] ? arr[i + 1] : 0;
-        //                 break;
+        for(let i = 1; i < arr.length; i += 2){
+            if (i === 1){
+                switch(arr[i]){
+                    case '+':
+                        total = Number(arr[i - 1]) + Number(arr[i + 1]);
+                        console.log(total)
+                        break;
+
+                    case '-':
+                        total = Number(arr[i - 1]) - Number(arr[i + 1]);
                     
-        //             default:
-        //                 break;
-        //         }
-        //     }
-        // }
+                    default:
+                        total = total;
+                        break;
+                }
+            }else{
+                switch(arr[i]){
+                    case '+':
+                        total = total + Number(arr[i + 1]);
+                        console.log(total);
+                        break;
+
+                    default:
+                        total = total;
+                        break;
+                }
+            }
+        }
 
         this.setState({
             currentInput: [total]
@@ -105,6 +142,18 @@ class Calculator extends Component{
 
                         <button onClick={() => this.operatorClick('+')}>
                             +
+                        </button>
+
+                        <button onClick={() => this.operatorClick('-')}>
+                            -
+                        </button>
+
+                        <button onClick={() => this.operatorClick('x')}>
+                            x
+                        </button>
+
+                        <button onClick={() => this.operatorClick('/')}>
+                            /
                         </button>
 
                     </div>
